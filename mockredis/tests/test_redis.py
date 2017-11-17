@@ -174,6 +174,33 @@ class TestRedis(object):
         # should be less than the timeout originally set
         ok_(result <= 30, "Expected {} to be less than 30".format(result))
 
+    def test_persist(self):
+        """
+        Test whether persist removes ttl.
+        """
+        self.redis.set('key', 'key')
+        self.redis.expire('key', 30)
+
+        result = self.redis.persist('key')
+        eq_(result, True)
+        eq_(self.redis.ttl('key'), None)
+
+    def test_persist_no_timeout(self):
+        """
+        Test whether persist returns False when no timeout is set.
+        """
+        self.redis.set('key', 'key')
+
+        result = self.redis.persist('key')
+        eq_(result, False)
+
+    def test_persist_no_key(self):
+        """
+        Test whether persist returns False when key does not exist.
+        """
+        result = self.redis.persist('key')
+        eq_(result, False)
+
     def test_keys(self):
         eq_([], self.redis.keys("*"))
 
