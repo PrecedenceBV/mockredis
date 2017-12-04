@@ -225,6 +225,14 @@ class MockRedis(object):
             return True
         return False
 
+    def persist(self, key):
+        """Emulate persist"""
+        try:
+            del self.timeouts[key]
+            return True
+        except KeyError:
+            return False
+
     def ttl(self, key):
         """
         Emulate ttl
