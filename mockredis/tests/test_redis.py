@@ -92,6 +92,17 @@ class TestRedis(object):
         self.redis.decr('dkey')
         eq_(b'-1', self.redis.get('dkey'))
 
+    def test_time_format(self):
+        result = self.redis.time()
+        ok_(isinstance(result, tuple))
+        eq_(len(result), 2)
+
+        timestamp, millis = result
+        ok_(isinstance(timestamp, int))
+        ok_(timestamp > 0)
+        ok_(isinstance(millis, int))
+        ok_(millis > 0)
+
     def test_ttl(self):
         self.redis.set('key', 'key')
         self.redis.expire('key', 30)

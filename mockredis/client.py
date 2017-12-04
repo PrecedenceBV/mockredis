@@ -189,6 +189,17 @@ class MockRedis(object):
         return self._encode(key) in self.redis
     __contains__ = exists
 
+    def time(self):
+        """
+        Emulate time
+
+        :returns: a tuple of the current Unix timestamp, and the amount of
+                  microseconds already elapsed in the current second.
+        """
+        now = datetime.utcnow()
+        return int(time.mktime(now.timetuple())), now.microsecond
+
+
     def _expire(self, key, delta):
         if key not in self.redis:
             return False
